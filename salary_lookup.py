@@ -12,7 +12,7 @@ instructions on the expected format and how to convert from Excel.
 
 Usage:
     python salary_lookup.py "Company Name"
-    python salary_lookup.py "Company Name" --city "København"
+    python salary_lookup.py "Company Name" --city "Bengaluru"
     python salary_lookup.py "Company Name" --json
     python salary_lookup.py --list-all
 """
@@ -26,18 +26,20 @@ from pathlib import Path
 
 DATA_FILE = Path(__file__).parent / "salary_data.json"
 
-# Common Danish <-> anglicized spelling variants
+# Common spelling variants (city-name and transliteration differences)
 SPELLING_VARIANTS = {
-    "ø": "o", "æ": "ae", "å": "aa",
+    "bengaluru": "bangalore", "gurugram": "gurgaon",
+    "mumbai": "bombay", "chennai": "madras", "kolkata": "calcutta",
     "ö": "o", "ä": "ae", "ü": "u",
 }
 
 # Legal suffixes and noise to strip when matching company names
 STRIP_PATTERNS = [
-    r"\ba/s\b", r"\baps\b", r"\bi/s\b", r"\bp/s\b", r"\bk/s\b",
-    r"\bivs\b", r"\bamba\b", r"\ba\.m\.b\.a\.\b",
-    r"\(vg\)", r"\(.*?\)",  # (VG) and other parentheticals
-    r"\bdanmark\b", r"\bdenmark\b", r"\bscandinavia\b", r"\bnordic\b",
+    r"\bpvt\.?\s*ltd\.?\b", r"\bprivate\s+limited\b", r"\blimited\b", r"\bltd\.?\b",
+    r"\bllp\b", r"\binc\.?\b", r"\bcorp\.?\b", r"\bco\.?\b",
+    r"\(p\)", r"\(.*?\)",  # (P) and other parentheticals
+    r"\bindia\b", r"\bbharat\b", r"\btechnologies\b", r"\btechnology\b",
+    r"\bsolutions\b", r"\bservices\b", r"\bconsultancy\b", r"\bconsulting\b",
     r"\bgroup\b", r"\bholding\b",
     r",\s*.*$",  # everything after comma (sub-entities)
 ]
@@ -67,10 +69,10 @@ def normalize(s):
 
 
 def anglicize(s):
-    """Convert Danish/Nordic characters to anglicized equivalents."""
+    """Normalize common spelling variants (city renames, transliterations)."""
     s = s.lower()
-    for danish, english in SPELLING_VARIANTS.items():
-        s = s.replace(danish, english)
+    for variant, canonical in SPELLING_VARIANTS.items():
+        s = s.replace(variant, canonical)
     return s
 
 

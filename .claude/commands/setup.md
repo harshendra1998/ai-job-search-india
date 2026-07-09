@@ -313,7 +313,7 @@ Ask about:
 - **Key skills as search terms:** "Which of your skills are most likely to appear in job postings?" Pick 3-5 that are distinctive and searchable.
 - **Target companies (optional):** "Are there specific companies you'd like to monitor for openings?"
 - **Geographic scope:** "Which cities or regions should I search in? How far are you willing to commute?" Use this to define the location filter tiers (ideal, acceptable, borderline, too far).
-- **Job portals:** "The framework includes tools for Danish job portals (Jobindex, Jobbank, Jobdanmark, Jobnet). Are these the right ones for you, or do you use other sites?" Note: if the user is outside Denmark, acknowledge that the built-in CLI tools are Denmark-specific and suggest they can add their own portal integrations or rely on LinkedIn/Google site-searches.
+- **Job portals:** "The framework includes tools for Indian job portals (Foundit, Shine) plus LinkedIn. Are these the right ones for you, or do you use other sites — Naukri, Instahyre, Cutshort, Hirist, IIMJobs?" Note: Naukri blocks automated access, so it is covered via Google site-searches during `/scrape`; other portals can be added with `/add-portal`. If the user is outside India, acknowledge that the Foundit/Shine tools are India-specific and suggest `/add-portal` for their local boards or the country-agnostic LinkedIn tool.
 
 **Important:** Also suggest role types the user may not have considered, based on their skill profile. For example:
 - If they have strong Python + domain expertise: "Have you considered roles like 'Technical Consultant' or 'Solutions Engineer' in your domain?"

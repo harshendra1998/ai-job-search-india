@@ -2,11 +2,11 @@
   <img src="claude_animation.gif" alt="AI Job Search Assistant" width="200">
 </p>
 
-# AI Job Search
+# AI Job Search — India Edition
 
-[![CI](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml/badge.svg)](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml)
+An AI-powered job application framework built on [Claude Code](https://claude.com/claude-code), adapted for the **Indian job market**. Fork it, fill in your profile, and let Claude evaluate job postings, tailor your CV, write cover letters, and prepare you for interviews.
 
-An AI-powered job application framework built on [Claude Code](https://claude.com/claude-code). Fork it, fill in your profile, and let Claude evaluate job postings, tailor your CV, write cover letters, and prepare you for interviews.
+> This is an India-focused fork of [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search). The Danish portal tools have been replaced with Indian ones (Foundit, Shine, plus the country-agnostic LinkedIn tool), and the search strategy, salary tooling, and examples are localized for India.
 
 > Note: This is an independent open-source project and is not affiliated with, endorsed by, sponsored by, or maintained by Anthropic. Anthropic and Claude Code are referenced only to describe the toolchain this workflow uses.
 
@@ -23,7 +23,7 @@ An AI-powered job application framework built on [Claude Code](https://claude.co
 
 ## What this is
 
-A structured workflow that turns Claude Code into a full-stack job application assistant. The core workflow (self-profiling, fit evaluation, and the drafter-reviewer application pipeline) is **language- and country-agnostic**. The job portal search skills are built for the Danish market (Jobindex, Jobnet, Akademikernes Jobbank, etc.), but the pattern is designed to be swapped for your local job boards.
+A structured workflow that turns Claude Code into a full-stack job application assistant. The core workflow (self-profiling, fit evaluation, and the drafter-reviewer application pipeline) is **language- and country-agnostic**. The job portal search skills are built for the **Indian market** — [Foundit](https://www.foundit.in) (formerly Monster India), [Shine](https://www.shine.com), and LinkedIn (India locations or remote). Naukri.com hard-blocks automated access (recaptcha), so `/scrape` covers it via Google `site:naukri.com` searches instead of a CLI tool.
 
 ```
 /setup          /scrape              /apply <url>
@@ -47,7 +47,7 @@ The framework encodes career guidance best practices, including structured evalu
 
 - [Claude Code](https://claude.com/claude-code) (CLI)
 - Python 3.10+
-- [Bun](https://bun.sh) (for Danish job search CLI tools)
+- [Bun](https://bun.sh) (for the job search CLI tools)
 - LaTeX distribution with `lualatex` and `xelatex`: [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), [TinyTeX](https://yihui.org/tinytex/), or [MiKTeX](https://miktex.org/). The CV compiles with `lualatex` (pdflatex often fails on modern MiKTeX installs with `fontawesome5` font-expansion errors); the cover letter compiles with `xelatex` because `cover.cls` requires `fontspec`. If using a minimal TeX install such as TinyTeX or BasicTeX, install the extra packages listed in [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex).
 - Optional: `pdftotext` from [poppler](https://poppler.freedesktop.org/) (macOS: `brew install poppler`, Debian/Ubuntu: `apt install poppler-utils`, Windows: `choco install poppler`) — used by `/apply`'s ATS parseability check on the compiled CV. If missing, the check degrades gracefully to a visual keyword review.
 
@@ -56,8 +56,8 @@ The framework encodes career guidance best practices, including structured evalu
 ### 1. Fork and clone
 
 ```bash
-gh repo fork MadsLorentzen/ai-job-search --clone
-cd ai-job-search
+git clone <your-fork-url>
+cd ai-job-search-india
 ```
 
 ### 2. Install job search tools
@@ -65,7 +65,7 @@ cd ai-job-search
 PowerShell:
 
 ```powershell
-$tools = @("jobbank-search", "jobdanmark-search", "jobindex-search", "jobnet-search", "linkedin-search")
+$tools = @("foundit-search", "shine-search", "linkedin-search")
 foreach ($tool in $tools) {
   Set-Location ".agents/skills/$tool/cli"
   bun install
@@ -76,14 +76,12 @@ foreach ($tool in $tools) {
 Bash / zsh / Git Bash:
 
 ```bash
-cd .agents/skills/jobbank-search/cli && bun install && cd ../../../..
-cd .agents/skills/jobdanmark-search/cli && bun install && cd ../../../..
-cd .agents/skills/jobindex-search/cli && bun install && cd ../../../..
-cd .agents/skills/jobnet-search/cli && bun install && cd ../../../..
+cd .agents/skills/foundit-search/cli && bun install && cd ../../../..
+cd .agents/skills/shine-search/cli && bun install && cd ../../../..
 cd .agents/skills/linkedin-search/cli && bun install && cd ../../../..
 ```
 
-For `linkedin-search` the install is optional: it has zero runtime dependencies and runs with plain `bun`; `bun install` only pulls TypeScript dev types.
+The install is optional for all three tools: they have zero runtime dependencies and run with plain `bun`; `bun install` only pulls TypeScript dev types.
 
 ### 3. Set up your profile
 
@@ -106,10 +104,10 @@ This searches multiple job portals for positions matching your profile, deduplic
 ### 5. Apply to a job
 
 ```bash
-/apply https://jobindex.dk/job/1234567
+/apply https://www.foundit.in/job/senior-data-engineer-12345678
 ```
 
-If the URL can't be fetched (some job portals block automated access), you can paste the job description directly instead:
+If the URL can't be fetched (some job portals — Naukri especially — block automated access), you can paste the job description directly instead:
 
 ```bash
 /apply <paste the full job description here>
@@ -161,10 +159,8 @@ ai-job-search/
 │   │   └── upskill/                   # /upskill skill gap analysis and learning plan
 │   └── settings.json                  # Claude Code permissions (shared, scoped)
 ├── .agents/skills/                    # Job portal CLI tools
-│   ├── jobbank-search/                # Akademikernes Jobbank (Denmark)
-│   ├── jobdanmark-search/             # Jobdanmark.dk (Denmark)
-│   ├── jobindex-search/               # Jobindex.dk (Denmark)
-│   ├── jobnet-search/                 # Jobnet.dk (Denmark, government portal)
+│   ├── foundit-search/                # Foundit.in, formerly Monster India
+│   ├── shine-search/                  # Shine.com (India)
 │   └── linkedin-search/               # LinkedIn public job listings (country-agnostic)
 ├── cv/
 │   └── main_example.tex               # moderncv LaTeX template
@@ -263,7 +259,7 @@ If you prefer doing it by hand, the manual route still works: update the guidanc
 
 ### Job search tools
 
-The four Danish CLI tools in `.agents/skills/` (Jobbank, Jobdanmark, Jobindex, Jobnet) demonstrate the pattern for building a job-portal integration for a specific market. If you're in a different country, run:
+The two Indian CLI tools in `.agents/skills/` (Foundit, Shine) demonstrate the pattern for building a job-portal integration for a specific market. To add another board — Hirist, Cutshort, TimesJobs, IIMJobs, or anything else — run:
 
 ```
 /add-portal
@@ -277,7 +273,7 @@ For a **country-agnostic** starting point, the repo also includes **`linkedin-se
 
 ### Salary benchmarking
 
-The salary tool works with any salary data you provide (union statistics, Glassdoor exports, personal research, etc.). See `tools/README_SALARY_TOOL.md` for the expected format and setup. If you don't have salary data, the salary step is simply skipped.
+The salary tool works with any salary data you provide — [AmbitionBox](https://www.ambitionbox.com/salaries) research, [levels.fyi](https://www.levels.fyi/t/software-engineer/locations/india) India data, Glassdoor exports, or personally collected CTC benchmarks (in LPA). See `tools/README_SALARY_TOOL.md` for the expected format and setup. If you don't have salary data, the salary step is simply skipped.
 
 ### Starting over
 
@@ -316,6 +312,7 @@ Thinking about a PR? Read [CONTRIBUTING.md](CONTRIBUTING.md) first - it explains
 
 ## Acknowledgements
 
+- [Mads Lorentzen](https://github.com/MadsLorentzen) for the original [ai-job-search](https://github.com/MadsLorentzen/ai-job-search) framework this fork is built on
 - [Mikkel Krogholm](https://github.com/mikkelkrogsholm) ([skills repo](https://github.com/mikkelkrogsholm/skills)) for the job search CLI skills
 - Built with [Claude Code](https://claude.com/claude-code) by [Anthropic](https://anthropic.com)
 

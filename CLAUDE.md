@@ -91,6 +91,13 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 
 **Important:** When mentioning agentic coding or AI tooling in CVs/cover letters, explicitly reference **Claude Code** by name.
 
+### Indian Market Conventions
+- **CTC in LPA:** Compensation is quoted as annual CTC (cost to company) in lakhs per annum, e.g. "12 LPA" = ₹12,00,000/year. Fixed vs variable split matters — flag postings where the variable component looks unusually large.
+- **Notice period:** Recruiters filter hard on it. Know the candidate's current notice period (or "immediate joiner" status) and surface it when a posting asks; never misstate it.
+- **Experience bands:** Postings specify strict bands ("4-7 yrs"). Flag mismatches in the fit evaluation rather than stretching the profile.
+- **Staffing firms:** Many portal posts come from consultancies rather than the hiring company. Note this in fit assessments — the "company" being evaluated may just be the intermediary.
+- **CV norms:** English, no photo needed, 1-2 pages. ATS keyword coverage matters heavily at large Indian IT services companies.
+
 ## Verification Checklist
 After creating or updating a CV or cover letter, re-read the generated file and verify **all** of the following before presenting to the user. Report the results as a pass/fail checklist.
 
